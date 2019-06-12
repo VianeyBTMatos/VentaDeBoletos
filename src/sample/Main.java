@@ -33,6 +33,7 @@ public class Main extends Application {
     private TextField txfApellido = new TextField();
     private TextField txfDireccion = new TextField();
     private Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private Boolean bandera = true;
 
     private TabPane tabpane = new TabPane();
     @Override
@@ -86,17 +87,21 @@ public class Main extends Application {
                 DBManager accesoBD = null;
                 try {
                     accesoBD = new DBManager();
-                } catch (SQLException e) {
+                }
+                catch (SQLException e) {
                     e.printStackTrace();
                 }
 
-                OperacionesClientes opCliente = new OperacionesClientes(accesoBD.getConnection());
 
-                opCliente.insertCliente(txfNombre.getText(), txfApellido.getText(), txfDireccion.getText());
 
-                alert.setTitle("Registro");
-                alert.setHeaderText("Registro Excitoso");
-                alert.showAndWait();
+                    OperacionesClientes opCliente = new OperacionesClientes(accesoBD.getConnection());
+                    opCliente.insertCliente(txfNombre.getText(), txfApellido.getText(), txfDireccion.getText());
+                    bandera= true;
+
+                    alert.setTitle("Registro");
+                    alert.setHeaderText("Registro Exitoso");
+                    alert.showAndWait();
+
             }
         });
 
@@ -120,26 +125,15 @@ public class Main extends Application {
 
         Label lBuscar = new Label("BUSCAR");
         TextField txfID = new TextField();
-        Label txfBNombre = new Label("----");
-        Label txfBApellido = new Label("----");
-        Label txfBDireccion = new Label("----");
         Button btnBuscar = new Button("Buscar");
 
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(0,10,0,10));
 
+        txfID.setPromptText("Nombre");
+        GridPane.setConstraints(txfID, 1, 0);
 
-        Text Unidades = new Text("MOSTRAR");
-        Unidades.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        grid.add(Unidades, 2,0);
-        grid.add(lBuscar, 1,1 );
-        grid.add(txfBNombre,1,3);
-        grid.add(txfBApellido,2,3);
-        grid.add(txfBDireccion,3,3);
-
-        txfID.setPromptText("ID");
-        GridPane.setConstraints(txfID, 2, 1);
         grid.getChildren().add(txfID);
         grid.getChildren().add(tabla);
 
@@ -157,22 +151,29 @@ public class Main extends Application {
                 OperacionesClientes opCliente = new OperacionesClientes(accesoBD.getConnection());
                 ArrayList<Cliente> arrayClientes;
                 arrayClientes = opCliente.getClientes(nombre1);
-                //String nom = clt.getNombre();
-                alert.setTitle("Buscar");
-                alert.setHeaderText("Busqueda Exitosa");
-                alert.showAndWait();
-                final ObservableList<Cliente> data = FXCollections.observableArrayList();
+                //finalString nom = clt.getNombre();
+
+                ObservableList<Cliente> data = FXCollections.observableArrayList();
                 data.removeAll();
                 data.addAll(arrayClientes);
                 tabla.setItems(data);
+                txfID.setText(" ");
+
+                if(arrayClientes.size()==0){
+                    alert.setTitle("No encontrado");
+                    alert.setHeaderText("NO SE ENCONTRO NADA");
+                    alert.showAndWait();
+                }else{
+                    alert.setTitle("Buscar");
+                    alert.setHeaderText("Busqueda Exitosa");
+                    alert.showAndWait();
+                }
 
                 //System.out.println(arrayClientes.size());
             }
         });
 
-        grid.add(btnBuscar,1,4);
-
-
+        grid.add(btnBuscar,2,0);
 
         return grid;
     }
@@ -234,6 +235,7 @@ public class Main extends Application {
                 txfNombreA.setText(clt.getNombre());
                 txfApellido.setText(clt.getApellidos());
                 txfDireccion.setText(clt.getDireccion());
+
             }
         });
 
@@ -263,6 +265,10 @@ public class Main extends Application {
                 alert.setTitle("Actualizar");
                 alert.setHeaderText("Actualizacion Exitosa");
                 alert.showAndWait();
+                txfNombre.setText(" ");
+                txfNombreA.setText(" ");
+                txfApellido.setText(" ");
+                txfDireccion.setText(" ");
             }
         });
 
@@ -318,6 +324,7 @@ public class Main extends Application {
                 lbNombreA.setText(clt.getNombre());
                 lbApellido.setText(clt.getApellidos());
                 lbDireccion.setText(clt.getDireccion());
+
             }
         });
         btnEliminar.setOnAction(new EventHandler<ActionEvent>() {
@@ -338,6 +345,10 @@ public class Main extends Application {
                 alert.setTitle("Eliminar");
                 alert.setHeaderText("Eliminado");
                 alert.showAndWait();
+
+                lbNombreA.setText("---");
+                lbApellido.setText("---");
+                lbDireccion.setText("---");
 
             }
         });

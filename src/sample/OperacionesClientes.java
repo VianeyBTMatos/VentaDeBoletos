@@ -24,7 +24,7 @@ public class OperacionesClientes {
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            //Recorre cada resultado de todas las consultas realizadas
+
               if (rs.next()) {
                     clienteId = rs.getInt("clienteid");
                     nombre = rs.getString("nombre");
@@ -43,9 +43,7 @@ public class OperacionesClientes {
             return null;
         }
     }
-
-
-
+//Cliente por nombre
     public ArrayList<Cliente> getClientes(String nombreCliente){
         int clienteId = 0;
         String nombre="", apellidos="", direccion="";
@@ -61,16 +59,14 @@ public class OperacionesClientes {
             ArrayList<Cliente> arrayClientes= new ArrayList<>();
 
             while(rs.next()) {
-                System.out.println("Entra");
+                //System.out.println("Entra");
                 clienteId = rs.getInt("clienteid");
                 nombre = rs.getString("nombre");
                 apellidos = rs.getString("apellidos");
                 direccion = rs.getString("direccion");
                 arrayClientes.add(new Cliente(clienteId, nombre, apellidos, direccion));
             }
-
             //System.out.println(clienteId + ", " + nombre + " " + apellidos + ", " + direccion);
-
             return arrayClientes;
         }
         catch (java.sql.SQLException ex){
@@ -153,4 +149,6 @@ public class OperacionesClientes {
 
         return numRegs;
     }
+
+
 }
